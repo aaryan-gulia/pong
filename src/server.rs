@@ -4,17 +4,15 @@ pub async fn server(host: &String, port: &String) -> Result<(), String> {
         .await
         .map_err(|_| "failed to bind")?;
     let (handle, _) = listener.accept().await.map_err(|_| "failed to accept")?;
-
-    let (mut reader, mut writer) = handle.into_split();
-
-    let server_reader =
-        tokio::spawn(async move { tokio::io::copy(&mut reader, &mut tokio::io::stdout()).await });
-    let server_writer =
-        tokio::spawn(async move { tokio::io::copy(&mut tokio::io::stdin(), &mut writer).await });
+    let (mut reader_1, mut writer_1) = handle.into_split();
+    let (handle, _) = listener.accept().await.map_err(|_| "failed to accept")?;
+    let (mut reader_2, mut writer_2) = handle.into_split();
+    let server_1 = tokio::spawn(async move { tokio::io::copy(&mut reader_1, &mut writer_2).await });
+    let server_2 = tokio::spawn(async move { tokio::io::copy(&mut reader_2, &mut writer_1).await });
 
     tokio::select!(
-        _ = server_reader => {},
-        _ = server_writer => {}
+        _ = server_1 => {},
+        _ = server_2 => {}
     );
 
     Ok(())

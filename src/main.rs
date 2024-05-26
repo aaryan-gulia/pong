@@ -1,7 +1,7 @@
 use clap::Parser;
-use pong::cli::Cli;
+use pong::{cli::Cli, networking::network};
 
 fn main() {
     let cli = Cli::parse();
-    println!("Hello, world!");
+    network(&cli.mode, &cli.host, &cli.port);
 }

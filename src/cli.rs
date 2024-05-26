@@ -24,13 +24,13 @@ impl std::str::FromStr for Mode {
 pub struct Cli {
     /// Server or Client
     #[arg(long, short)]
-    mode: Mode,
+    pub mode: Mode,
 
     /// host
     #[arg(long, default_value_t = String::from("localhost"))]
-    host: String,
+    pub host: String,
 
     /// port
     #[arg(long, default_value_t = String::from("2323"))]
-    port: String,
+    pub port: String,
 }
