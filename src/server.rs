@@ -1,5 +1,6 @@
-pub async fn server() -> Result<(), String> {
-    let listener = tokio::net::TcpListener::bind("localhost:2323")
+pub async fn server(host: &String, port: &String) -> Result<(), String> {
+    let addr = format!("{}:{}", host, port);
+    let listener = tokio::net::TcpListener::bind(addr)
         .await
         .map_err(|_| "failed to bind")?;
     let (handle, _) = listener.accept().await.map_err(|_| "failed to accept")?;

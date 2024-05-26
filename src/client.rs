@@ -1,5 +1,6 @@
-pub async fn client() -> Result<(), String> {
-    let client = tokio::net::TcpStream::connect("localhost:2323")
+pub async fn client(host: &String, port: &String) -> Result<(), String> {
+    let addr = format!("{}:{}", host, port);
+    let client = tokio::net::TcpStream::connect(addr)
         .await
         .map_err(|_| "Failed to connect")?;
     let (mut reader, mut writer) = client.into_split();
@@ -14,5 +15,6 @@ pub async fn client() -> Result<(), String> {
         _ = client_read => {},
         _ = client_write => {}
     );
+
     Ok(())
 }
